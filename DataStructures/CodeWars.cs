@@ -145,7 +145,7 @@ namespace LeetCoding
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        static int SumOfTwoSumTargets(int[] numbers, int min, int max)
+        public static int SumOfTwoSumTargets(int[] numbers, int min, int max)
         {
             int[] targets = Enumerable.Range(min, max - min).ToArray();
 
@@ -176,6 +176,14 @@ namespace LeetCoding
             }
 
             return sum;
+        }
+
+        public static string GetMiddle(string s)
+        {
+            int offset = s.Length % 2 == 0 ? 1 : 0;
+            string middle = s.Substring(s.Length / 2 - offset, offset + 1);
+
+            return middle;
         }
     }
 }
