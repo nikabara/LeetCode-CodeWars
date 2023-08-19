@@ -245,5 +245,51 @@ namespace LeetCoding
 
             return steps;
         }
+
+        public static int CountBits(int n)
+        {
+            return Convert.ToString(n, 2).Count(x => x == '1');
+        }
+
+        public static string DoubleChar(string s)
+        {
+            char[] sChars = s.ToCharArray();
+            string resultStr = string.Empty;
+            for (int i = 0; i < sChars.Length; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    resultStr += sChars[i];
+                }
+            }
+
+            return resultStr;
+        }
+
+        public static string DoubleChar2(string s)
+        {
+            return string.Join("", s.Select(x => "" + x + x));
+        }
+
+        public static int MaxSequence(int[] arr)
+        {
+            if (arr.Length == 0)
+            {
+                return arr.Length;
+            }
+            int maxSub = arr[0];
+            int curSum = 0;
+
+            foreach (var n in arr)
+            {
+                if (curSum < 0)
+                {
+                    curSum = 0;
+                }
+                curSum += n;
+                maxSub = Math.Max(maxSub, curSum);
+            }
+            return maxSub;
+        }
     }
 }
