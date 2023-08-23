@@ -291,5 +291,220 @@ namespace LeetCoding
             }
             return maxSub;
         }
+
+        public static int[] SortArray(int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                for (int j = i + 1; j < array.Length; j++)
+                {
+                    if (array[i] > array[j] && array[i] % 2 != 0 && array[j] % 2 != 0)
+                    {
+                        int temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+                        i = 0;
+                        j = 0;
+                    }
+                }
+            }
+
+            return array;
+        }
+
+        public static int[] MoveZeroes(int[] arr)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                for (int j = i + 1; j < arr.Length; j++)
+                {
+                    if (arr[i] == 0 && arr[j] != 0)
+                    {
+                        arr[i] = arr[j];
+                        arr[j] = 0;
+                        j = i;
+                    }
+                }
+            }
+
+            return arr;
+        }
+
+        public static string GetReadableTime(int seconds)
+        {
+            int h = seconds / 3600; string hStr = h.ToString();
+            int m = (seconds - h * 3600) / 60; string mStr = m.ToString();
+            int s = seconds - (h * 3600) - (m * 60); string sStr = s.ToString();
+
+            if (seconds < 0)
+            {
+                return $"00:00:00";
+            }
+            if (s < 10)
+            {
+                sStr = "0" + sStr;
+            }
+            if (m < 10)
+            {
+                mStr = "0" + mStr;
+            }
+            if (h < 10)
+            {
+                hStr = "0" + hStr;
+            }
+
+            return $"{hStr}:{mStr}:{sStr}";
+        }
+
+        public static double DistanceFromLine((int, int) a, (int, int) b, (int, int) c)
+        {
+            if (a.Item1 == b.Item1 && a.Item2 == b.Item2)
+            {
+                return Math.Sqrt(Math.Pow(a.Item1 - c.Item1, 2) + Math.Pow(a.Item2 - c.Item2, 2));
+            }
+
+            double over = Math.Abs((b.Item1 - a.Item1) * (a.Item2 - c.Item2) - (a.Item1 - c.Item1) * (b.Item2 - a.Item2));
+            double under = Math.Sqrt(Math.Pow(b.Item1 - a.Item1, 2) + Math.Pow(b.Item2 - a.Item2, 2));
+            double result = over / under;
+            return result;
+        }
+
+        public static long FindNb(long m)
+        {
+            long counter = 0;
+            if (Math.Sign(m) == -1)
+            {
+                return -1;
+            }
+            else
+            {
+                while (m > 0)
+                {
+                    counter++;
+                    long cube = (long)Math.Pow(counter, 3);
+                    m -= cube;
+                }
+                if (Math.Sign(m) == -1)
+                {
+                    return -1;
+                }
+            }
+            return counter;
+        }
+
+        public static List<int> SumDiagonals(int[,] matrix, List<Tuple<int, int>> queries)
+        {
+            int M = matrix.GetLength(0);
+            int N = matrix.GetLength(1);
+
+            int[] mainDiagonalSums = new int[M + N - 1];
+            int[] antiDiagonalSums = new int[M + N - 1];
+
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    mainDiagonalSums[j - i + (M - 1)] += matrix[i, j];
+                    antiDiagonalSums[j + i] += matrix[i, j];
+                }
+            }
+
+            List<int> result = new List<int>();
+            foreach ((int i, int j) in queries)
+            {
+                result.Add(mainDiagonalSums[j - i + M - 1] + antiDiagonalSums[j + i] - matrix[i, j]);
+            }
+            return result;
+        }
+
+        public static int Solve(string s)
+        {
+            char[] sChars = s.ToCharArray();
+            List<int> subArrays = new List<int>();
+            int curSum = 0;
+
+            if (sChars.Length == 0)
+            {
+                return -1;
+            }
+            for (int i = 0; i < sChars.Length; i++)
+            {
+                if (sChars[i] != 'a' && sChars[i] != 'e' && sChars[i] != 'i' && sChars[i] != 'o' && sChars[i] != 'u')
+                {
+                    curSum += Convert.ToInt32(sChars[i]) - 96;
+                }
+                else if (sChars[i] == 'a' || sChars[i] == 'e' || sChars[i] == 'i' || sChars[i] == 'o' || sChars[i] == 'u')
+                {
+                    subArrays.Add(curSum);
+                    curSum = 0;
+                }
+            }
+
+            return subArrays.Max();
+        }
+
+        public static int GetParticipants(int handshakes)
+        {
+            int k = 1;
+            for (int i = 0; i < handshakes; i += k++) ;
+            return k;
+        }
+
+        /// <summary>
+        /// First 4KYU problem \(*^*)/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static List<string> Top3(string s)
+        {
+            string[] delimiters = new string[] { " ", ",", ".", ":", "_", "-", "/", "\\", ";", "!", "?", "*", "&" };
+            List<string> strList = s.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Select(x => x.ToLower()).ToList();
+
+            for (int i = 0; i < strList.Count; i++)
+            {
+                if (strList[i].Contains('\'') && !strList[i].Any(x => char.IsLetter(x)))
+                {
+                    strList.Remove(strList[i]);
+                }
+            }
+
+            if (strList.Count == 0)
+            {
+                return new List<string>();
+            }
+
+            List<string> counted = new();
+            Dictionary<string, int> podium = new();
+
+            for (int i = 0; i < strList.Count; i++)
+            {
+                if (!counted.Contains(strList[i]))
+                {
+                    counted.Add(strList[i]);
+                    podium.Add(strList[i], strList.Count(x => x == strList[i]));
+                }
+            }
+
+            podium = podium.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            List<string> result = new();
+
+            if (podium.Count >= 3)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    result.Add(podium.ElementAt(i).Key);
+                }
+            }
+            else if (podium.Count < 3)
+            {
+                for (int i = 0; i < podium.Count; i++)
+                {
+                    result.Add(podium.ElementAt(i).Key);
+                }
+            }
+
+            return result;
+        }
     }
 }
